@@ -22,7 +22,14 @@ public class PathRequester : MonoBehaviour //keeps track of the path the gameobj
                 pathIndex++;
             }
 
-            return path[pathIndex];
+            if (pathIndex < path.Length)
+            {
+                return path[pathIndex];
+            }
+            else
+            {
+                path = null;
+            }
         }
         return currPos;
     }

@@ -132,38 +132,9 @@ public class PlayerMovement : MonoBehaviour
     public bool Jumping { get; private set; }
     public float jumpSpeed;
     public float maxJumpTime;
-    void JumpInput()
-    {
-        //sets jumping to true if the input is valid
-
-        CheckJumpConditions();
-        Initial();
-        Rise();
-    }
-
-    bool validPress;
-    bool initiateJump;
-    void Initial()
-    {
-        //if standing on ground and have let go of the jump button, can jump
-
-        initiateJump = OnGroundVar && validPress;
-    }
-
     float jumpTime;
-    bool rising;
-    float bonkCoefficient = .5f;
-    void Rise()
-    {
-        //if jump can be initiated, have not let go of jump button and not for too long, can jump
-
-        if (initiateJump) rising = true;
-
-        Jumping = rising;
-        rising = validPress;
-    }
-
-    void CheckJumpConditions()
+    const float bonkCoefficient = .5f;
+    void JumpInput()
     {
         //ground check, if pressing jump button, get jump time
 
@@ -171,19 +142,19 @@ public class PlayerMovement : MonoBehaviour
         {
             if (OnGroundVar && canMove)
             {
-                validPress = true;
+                Jumping = true;
             }
         }
         else if (Input.GetButtonUp("Jump") || !canMove)
         {
-            validPress = false;
+            Jumping = false;
         }
 
-        if (rising) jumpTime += Time.deltaTime;
+        if (Jumping) jumpTime += Time.deltaTime;
         else jumpTime = 0;
 
         if (jumpTime >= maxJumpTime)
-            validPress = false;
+            Jumping = false;
 
         if (Physics.CheckBox(new Vector3(0, controller.height + .101f, 0) + transform.position, new Vector3(.4f, .2f, .4f), transform.rotation, ~groundCheckIgnoreMask) && yVel > 0) //if player jumps into a roof
         {
@@ -280,7 +251,7 @@ public class PlayerMovement : MonoBehaviour
     float currDashTime;
     public float dashSpeed;
     float currDashSpeed;
-    public float dashAcceleration = 40; //set in start
+    public float dashAcceleration = 40; //set on start
     void DashInput()
     {
         if (Input.GetButtonDown("Dash"))

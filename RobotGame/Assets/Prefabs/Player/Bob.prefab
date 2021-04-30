@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3238270477494852054}
   m_Layer: 6
-  m_Name: BobSkeleton
+  m_Name: Bob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -125,14 +125,14 @@ public class CameraMomement : MonoBehaviour
             Yrot %= 360; //remove for beyblade action
             if (Yrot < 0) Yrot += 360; //makes sure y rotation isn't negative, because new y will never be negative
 
-            if (Mathf.Abs(newY - Yrot) > 180) //can never rotate more than 180 degrees, if it does use nagative values instead
+            if (newY - Yrot > 180) //can never rotate more than 180 degrees, if it does use nagative values instead
             {
                 if (newY > 180)
                 {
                     newY -= 360;
                 }
 
-                if (Yrot > 180)
+                else if (Yrot > 180)
                 {
                     Yrot -= 360;
                 }

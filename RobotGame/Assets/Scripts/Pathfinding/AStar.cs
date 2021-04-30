@@ -83,7 +83,7 @@ public class AStar : MonoBehaviour
             }
             currNode = candidateForCurr;
 
-            if (currNode == null) 
+            if (!currNode)
             {
                 Debug.LogWarning("Path can't be found: dead end");
                 return null;

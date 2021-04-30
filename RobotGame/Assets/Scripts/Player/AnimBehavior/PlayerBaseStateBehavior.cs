@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerBaseStateBehavior : StateMachineBehaviour
 {
-    protected readonly int WALK_STATE = Animator.StringToHash("Walk");
-    protected readonly int JUMP_STATE = Animator.StringToHash("Jump");
+    protected static readonly int WALK_STATE = Animator.StringToHash("Walk");
+    protected static readonly int JUMP_STATE = Animator.StringToHash("Jump");
 
     //https://www.youtube.com/watch?v=tjV7E9WITKQ
     private PlayerMovement playerMovement;

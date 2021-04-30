@@ -9,7 +9,7 @@ public class EnemyBehavior : EntityBehavior
     public CameraMomement tripod; //get player through tripod
     public EnemyBounds enemyBounds;
     public PathRequester pathRequester;
-    public float walkAcceleration; //in 
+    public float walkAcceleration;
     public float StepSpeed { get; set; } //set in attack state behaviors
     Rigidbody rb;
     float r;
@@ -41,7 +41,7 @@ public class EnemyBehavior : EntityBehavior
     }
 
     readonly float magnitideDiffForNewPath = 1f;
-    Vector3 GetWalkDirection(Vector3 walkTo) 
+    Vector3 GetWalkDirection(Vector3 walkTo)
     {
         //returns current vector in path
 
@@ -64,7 +64,7 @@ public class EnemyBehavior : EntityBehavior
 
     public void SetStepSpeed(float speed) //called from animation events to have varying speed
     {
-        StepSpeed = speed;
+        StepSpeed = speed; //could start a coroutine that lerps
     }
 
     public bool PlayerInBounds()
@@ -77,7 +77,7 @@ public class EnemyBehavior : EntityBehavior
 
     public float DistanceToPlayer()
     {
-        Vector2 playerPos = new Vector2(tripod.player.transform.position.x, tripod.player.transform.position.z); //disregard height
+        Vector2 playerPos = new Vector2(tripod.player.transform.position.x, tripod.player.transform.position.z); //disregards height
         Vector2 enemyPos = new Vector2(transform.position.x, transform.position.z);
         return Vector2.Distance(playerPos, enemyPos);
     }
@@ -97,9 +97,9 @@ public class EnemyBehavior : EntityBehavior
     public float rotationSpeed;
     public void RotateTo(Vector3 dir)
     {
-        float yaw = Mathf.Atan2(dir.z, dir.x) * (180 / -Mathf.PI); //get angle in degrees
+        float yaw = Mathf.Atan2(dir.z, dir.x) * -(180 / Mathf.PI); //get angle in degrees
         Quaternion yRot = Quaternion.Euler(0, yaw + 90, 0); //i'm not good enough at math to know why i need to add 90
-        transform.rotation = Quaternion.Lerp(transform.rotation, yRot, rotationSpeed); //lerp for effect
+        transform.rotation = Quaternion.Lerp(transform.rotation, yRot, rotationSpeed); //lerp for effect      
     }
 
     public ParticleSystem hitParticles;
@@ -112,7 +112,7 @@ public class EnemyBehavior : EntityBehavior
         return false;
     }
 
-    private void OnCollisionEnter(Collision collision) 
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player")) //walk into player
         {
