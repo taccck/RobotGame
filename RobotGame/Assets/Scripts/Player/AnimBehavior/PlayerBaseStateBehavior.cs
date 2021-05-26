@@ -7,13 +7,13 @@ public class PlayerBaseStateBehavior : StateMachineBehaviour
 
     //https://www.youtube.com/watch?v=tjV7E9WITKQ
     private PlayerMovement playerMovement;
-    public PlayerMovement GetPlayerMovement(Animator animator) 
+    public PlayerMovement GetPlayerMovement(Animator animator)
     {
         //get player movement from animator
 
         if (playerMovement == null)
         {
-            playerMovement = animator.GetComponentInParent<PlayerMovement>();
+            return playerMovement = animator.GetComponent<PlayerMovement>();
         }
         return playerMovement;
     }

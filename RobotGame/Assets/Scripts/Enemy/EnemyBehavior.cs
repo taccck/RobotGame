@@ -99,7 +99,7 @@ public class EnemyBehavior : EntityBehavior
     {
         float yaw = Mathf.Atan2(dir.z, dir.x) * -(180 / Mathf.PI); //get angle in degrees
         Quaternion yRot = Quaternion.Euler(0, yaw + 90, 0); //i'm not good enough at math to know why i need to add 90
-        transform.rotation = Quaternion.Lerp(transform.rotation, yRot, rotationSpeed); //lerp for effect      
+        transform.rotation = Quaternion.Lerp(transform.rotation, yRot, rotationSpeed); //lerp for effect
     }
 
     public ParticleSystem hitParticles;
