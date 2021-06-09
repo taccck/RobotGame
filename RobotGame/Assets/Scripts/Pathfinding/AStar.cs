@@ -22,14 +22,15 @@ public class AStar : MonoBehaviour
 
     public Vector3[] FindPath(Vector3 startPos, Vector3 endPos, float r) //returns a walkable path between start and end
     {
-        Node start = FindNodeBetween(startPos, endPos);
-        Node end = FindNodeBetween(endPos, startPos);
+        Node start = FindNodeBetween(startPos, endPos, r);
+        Node end = FindNodeBetween(endPos, startPos, r);
 
         if (start == null || end == null) //no path needs to be found if there is no obstacle between start and end
         {
             return new Vector3[] { startPos, endPos };
         }
 
+        start.GCost = 0;
         Node currNode = start;
         Vector3 currPos = currNode.transform.position;
         SortedNodeSet openSet = new SortedNodeSet(); //all nodes to consider as current node
@@ -40,10 +41,16 @@ public class AStar : MonoBehaviour
             {
                 if (!closedSet.Contains(n))
                 {
-                    openSet.Add(n);
-                    n.HCost = Vector3.Distance(n.transform.position, endPos);
-                    n.GCost = currNode.GCost + Vector3.Distance(currPos, n.transform.position);
-                    n.Parent = currNode;
+                    float hCost = Vector3.Distance(n.transform.position, endPos);
+                    float gCost = currNode.GCost + Vector3.Distance(currPos, n.transform.position);
+
+                    if (hCost + gCost < n.GetfCost())
+                    {
+                        n.HCost = hCost;
+                        n.GCost = gCost;
+                        n.Parent = currNode;
+                        openSet.Add(n);
+                    }
                 }
             }
 
@@ -60,31 +67,39 @@ public class AStar : MonoBehaviour
             openSet.Remove(currNode);
         }
 
+        foreach (Node n in grid) //reset g and h cost
+        {
+            n.GCost = Mathf.Infinity;
+            n.HCost = Mathf.Infinity;
+        }
+
         return RetraceSteps(currNode, start, startPos, endPos, r);
     }
 
-    Node FindNodeBetween(Vector3 startPos, Vector3 endPos)
+    Node FindNodeBetween(Vector3 startPos, Vector3 endPos, float r)
     {
         Node node;
 
-        (RaycastHit raycastHit, bool hit) hit = ObstacleRaycast(new Vector3(startPos.x, startPos.y + 100, startPos.z), startPos);
+        (RaycastHit raycastHit, bool hit) hit = ObstacleRaycast(new Vector3(startPos.x, startPos.y + 100, startPos.z), startPos, r);
         if (hit.hit)
         {
-            node = FindClosestNode(hit.raycastHit.transform.parent.GetComponentsInChildren<Node>(), startPos);
+            node = FindClosestNode(hit.raycastHit.transform.parent.GetComponentsInChildren<Node>(), startPos, r);
         }
         else
         {
-            hit = ObstacleRaycast(startPos, endPos);
-            if (!hit.hit) return null; //no obstacle between start and end pos
+            hit = ObstacleRaycast(startPos, endPos, r);
 
+            if (!hit.hit)
+                return null; //no obstacle between start and end pos
             else
-                node = FindClosestNode(hit.raycastHit.transform.parent.GetComponentsInChildren<Node>(), startPos);
+                node = FindClosestNode(hit.raycastHit.transform.parent.GetComponentsInChildren<Node>(), startPos, r);
         }
+        //print(hit.raycastHit.transform.parent.name);
 
         return node;
     }
 
-    Node FindClosestNode(Node[] nodes, Vector3 position)
+    Node FindClosestNode(Node[] nodes, Vector3 position, float r)
     {
         Node node = null;
         float closestNode = Mathf.Infinity;
@@ -107,9 +122,9 @@ public class AStar : MonoBehaviour
         return node;
     }
 
-    (RaycastHit raycastHit, bool hit) ObstacleRaycast(Vector3 start, Vector3 end)
+    (RaycastHit raycastHit, bool hit) ObstacleRaycast(Vector3 start, Vector3 end, float r)
     {
-        bool hit = Physics.Raycast(start, end - start, out RaycastHit raycastHit, Vector3.Distance(start, end), obstacleMask, QueryTriggerInteraction.Collide);
+        bool hit = Physics.SphereCast(start, r, end - start, out RaycastHit raycastHit, Vector3.Distance(start, end) + .2f, obstacleMask, QueryTriggerInteraction.Collide);
         return (raycastHit, hit);
     }
 
@@ -124,6 +139,7 @@ public class AStar : MonoBehaviour
             path.Add(currPos);
             currNode = currNode.Parent;
         }
+        path.Add(lastNode.GetPostionWithOffset(r));
         path.Add(startPos);
 
         path.Reverse();

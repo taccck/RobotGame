@@ -59,7 +59,7 @@ public class EnemyBehavior : EntityBehavior
             pathRequester.SetPath(transform.position, walkTo, r);
         }
 
-        return pathRequester.GetWalkPoint(transform.position);
+        return pathRequester.GetWalkPoint(transform.position) ?? Vector3.zero;
     }
 
     public void SetStepSpeed(float speed) //called from animation events to have varying speed
@@ -88,10 +88,7 @@ public class EnemyBehavior : EntityBehavior
 
         Vector3 relativePosition = new Vector3(destination.x - transform.position.x, 0, destination.z - transform.position.z);
         RotateTo(relativePosition);
-        if (pathRequester.CanMoveTo(Vector3.Distance(Vector3.zero, relativePosition))) //if not too close to the destination
-        {
-            rb.velocity = transform.forward * moveSpeed;
-        }
+        rb.velocity = transform.forward * moveSpeed;
     }
 
     public float rotationSpeed;

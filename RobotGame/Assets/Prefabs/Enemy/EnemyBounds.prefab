@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   neighbourDetectionMaks:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2048
   obstacleMask:
     serializedVersion: 2
     m_Bits: 1024

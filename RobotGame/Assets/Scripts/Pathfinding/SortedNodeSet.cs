@@ -21,7 +21,18 @@ public class SortedNodeSet
     {
         for (int i = 0; i < Count; i++) //don't add the node if it already is in the array
         {
-            if (Nodes[i] == node) return;
+            if (Nodes[i] == node)
+            {
+                if (i - 1 >= 0)
+                {
+                    if (node.GetfCost() < Nodes[i - 1].GetfCost()) //if it should move up with its new lower value
+                    {
+                        Remove(node);
+                    }
+                    else return;
+                }
+                else return;
+            }
         }
 
         Node[] newArray = new Node[Count + 1];
